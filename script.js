@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentDateText = document.getElementById('currentDateText');
 
     // PASTE YOUR GOOGLE APPS SCRIPT URL HERE IF AVAILABLE
-    const GOOGLE_SCRIPT_URL = 'PASTE_URL_GOOGLE_APPS_SCRIPT_DI_SINI';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5gJf0NEpVUgp3IJWqsqZLf20AEB_8xFIoiIdbH49ZEefOymw1xmzGWP6IJmrJ4ZQRQA/exec';
 
     // Helper: Format Date to Indonesian Day and Date (e.g., Jumat, 12 September 2026)
     function getFormattedDate(dateObj) {
