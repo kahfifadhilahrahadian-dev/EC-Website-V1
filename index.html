@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Club Seputas - Portal Member & Informasi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="navbar">
+        <div class="logo-container">
+            <div class="logo-icon">✨</div>
+            <div class="logo-text">EC <span>SEPUTAS</span></div>
+        </div>
+        <nav class="nav-links">
+            <a href="#home">Beranda</a>
+            <a href="#announcements">Informasi & Poster</a>
+            <a href="#attendance">Absensi Member</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-badge">🌟 Welcome to Official Portal</div>
+        <h1 class="hero-title">English Club <span>Seputas</span></h1>
+        <p class="hero-subtitle">Platform resmi informasi, poster tutor invitation, dan presensi harian anggota English Club Seputas.</p>
+        <div class="hero-cta">
+            <a href="#attendance" class="btn btn-primary">⚡ Absen Sekarang</a>
+            <a href="#announcements" class="btn btn-secondary">📌 Lihat Jadwal & Poster</a>
+        </div>
+    </section>
+
+    <!-- Announcements & Poster Section -->
+    <section id="announcements" class="section container">
+        <div class="section-header">
+            <span class="tag">UPCOMING EVENT</span>
+            <h2>Invitation & Information</h2>
+            <p>Informasi tutor mingguan dan poster kegiatan terbaru English Club Seputas.</p>
+        </div>
+
+        <div class="grid-layout">
+            
+            <!-- Poster Card -->
+            <div class="card poster-card">
+                <div class="badge-status">Next Meeting</div>
+                <div class="poster-image-area">
+                    <div class="poster-placeholder">
+                        <div class="icon">🖼️</div>
+                        <p>Upload Poster Tutor di sini</p>
+                        <small>(File: tutor-poster.jpg)</small>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <span class="category">Weekly Session</span>
+                    <h3 class="card-title">Public Speaking & Confidence Masterclass</h3>
+                    
+                    <div class="tutor-info">
+                        <div class="avatar">👨‍🏫</div>
+                        <div>
+                            <p class="tutor-label">Guest Tutor</p>
+                            <p class="tutor-name">Mr. Alex Chandra, M.Pd.</p>
+                        </div>
+                    </div>
+
+                    <div class="details-list">
+                        <div class="detail-item">
+                            <span class="icon">📅</span>
+                            <span>Jumat, 12 September 2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="icon">⏰</span>
+                            <span>15.30 - 17.00 WIB</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="icon">📍</span>
+                            <span>Ruang Kelas X-A / Lab Bahasa</span>
+                        </div>
+                    </div>
+
+                    <p class="event-desc">
+                        Sesi spesial minggu ini akan membahas cara mengatasi rasa gugup saat berbicara bahasa Inggris di depan umum. Don't miss it!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Status Announcement Card -->
+            <div class="card info-card">
+                <div class="card-content">
+                    <span class="category info-tag">Club Status</span>
+                    <h3 class="card-title">📢 Status Pertemuan Minggu Ini</h3>
+                    <div class="status-banner">
+                        <span class="status-dot green"></span>
+                        <span class="status-text">Pertemuan Berjalan Sesuai Jadwal</span>
+                    </div>
+
+                    <div class="notice-box">
+                        <h4>Catatan Pengurus untuk Member:</h4>
+                        <ul>
+                            <li>Wajib datang tepat waktu sebelum jam 15.30 WIB.</li>
+                            <li>Membawa notebook / catatan masing-masing.</li>
+                            <li>Mengisi absensi di bagian bawah website ini setelah tiba di lokasi.</li>
+                        </ul>
+                    </div>
+
+                    <div class="quote-box">
+                        <p>"Speak to enrich your mind, not just to show off."</p>
+                        <small>- English Club Seputas Team</small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Attendance Section -->
+    <section id="attendance" class="section container">
+        <div class="attendance-wrapper">
+            <div class="section-header center">
+                <span class="tag">PRESENSI MEMBER</span>
+                <h2>Absensi Kehadiran</h2>
+                <p>Silakan isi data presensi Anda. Keterangan hari dan tanggal tersimpan otomatis.</p>
+                
+                <!-- Live Date Badge -->
+                <div class="today-date-badge">
+                    <span class="icon">📆</span> Presensi Pertemuan Hari Ini: <strong id="currentDateText">Loading date...</strong>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <form id="attendanceForm">
+                    <!-- Event Session Info Selector -->
+                    <div class="form-group">
+                        <label for="sessionName">📌 Sesi Pertemuan / Pertemuan Ke-</label>
+                        <select id="sessionName" required>
+                            <option value="Weekly Meeting - Public Speaking">Weekly Meeting - Public Speaking</option>
+                            <option value="Regular Class & Speaking Practice">Regular Class & Speaking Practice</option>
+                            <option value="Special Workshop / Event">Special Workshop / Event</option>
+                        </select>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullName">Nama Lengkap Member</label>
+                            <input type="text" id="fullName" placeholder="Masukkan nama lengkap Anda" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="memberId">Kelas / ID Member</label>
+                            <input type="text" id="memberId" placeholder="Contoh: XI MIPA 2 / EC-012" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status Kehadiran</label>
+                        <select id="status" required>
+                            <option value="">-- Pilih Status Kehadiran --</option>
+                            <option value="Hadir">Hadir (Present)</option>
+                            <option value="Izin">Izin (Permission)</option>
+                            <option value="Sakit">Sakit (Sick)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Catatan / Keterangan (Opsional)</label>
+                        <textarea id="notes" rows="3" placeholder="Tuliskan alasan jika Izin atau Sakit..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <span>Kirim Presensi Sekarang</span> ✨
+                    </button>
+                </form>
+
+                <div id="successMessage" class="toast hidden">
+                    🎉 Presensi Anda berhasil dicatat! Terima kasih telah berpartisipasi.
+                </div>
+            </div>
+
+            <!-- Attendance Records Table -->
+            <div class="records-container">
+                <div class="records-header">
+                    <div>
+                        <h3>📊 Data Presensi Member</h3>
+                        <p class="sub-text">Rekap kehadiran beserta keterangan Hari & Tanggal pertemuan.</p>
+                    </div>
+                    <span id="recordCount" class="badge-count">0 Terdata</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Hari & Tanggal</th>
+                                <th>Jam</th>
+                                <th>Sesi Pertemuan</th>
+                                <th>Nama Member</th>
+                                <th>Kelas / ID</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>English Club Seputas</h3>
+                <p>Inspiring confidence through English learning.</p>
+            </div>
+            <p class="copyright">&copy; 2026 English Club Seputas. Made with ✨ for Member Community.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
