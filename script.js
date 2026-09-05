@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const now = new Date();
         const fullDateStr = getFormattedDate(now);
-        const timeOnlyStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+        const timeOnlyStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }) + ' WIB';
 
         // PENTING: nama field ini harus sama persis dengan yang dibaca doPost di Apps Script
         const record = {
