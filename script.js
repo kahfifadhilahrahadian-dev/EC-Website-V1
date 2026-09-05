@@ -98,15 +98,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateTable();
 
-        // Send to Google Sheets if configured
-        if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL !== 'PASTE_URL_GOOGLE_APPS_SCRIPT_DI_SINI') {
+       // Send to Google Sheets and reload data live
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(record)
-            }).catch(err => console.error('Error sending to Google Sheets:', err));
-        }
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (successToast) successToast.classList.remove('hidden');
+                form.reset();
+                
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+
+                setTimeout(() => {
+                    if (successToast) successToast.classList.add('hidden');
+                }, 4000);
+
+                // Langsung muat ulang tabel agar data baru langsung muncul di kedua device
+                loadLiveAttendanceData();
+            })
+            .catch(err => {
+                console.error('Error sending to Google Sheets:', err);
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                // Tetap panggil data agar tabel tetap ter-refresh
+                loadLiveAttendanceData();
+            });
 
         // UI Feedback
         successToast.classList.remove('hidden');
