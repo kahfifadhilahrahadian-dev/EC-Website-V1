@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentDateText = document.getElementById('currentDateText');
     const submitBtn = form.querySelector('.btn-submit');
     const originalBtnHTML = submitBtn.innerHTML;
-
+ 
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZqevHoeVEsgwzgniOfxfa0_ZY7ZcKB_X4WAD4b5fXRtdyMZJ88aHccqkPXVlcdG_a7g/exec';
-
+ 
     // Helper: Format Date to Indonesian Day and Date (e.g., Jumat, 12 September 2026)
     function getFormattedDate(dateObj) {
         const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const year = dateObj.getFullYear();
         return `${dayName}, ${dayNum} ${monthName} ${year}`;
     }
+
 
     // Display Today's Date in Hero Header
     const nowObj = new Date();
