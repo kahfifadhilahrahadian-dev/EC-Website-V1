@@ -1,4 +1,152 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZqevHoeVEsgwzgniOfxfa0_ZY7ZcKB_X4WAD4b5fXRtdyMZJ88aHccqkPXVlcdG_a7g/exec';
+
+    // ============================================
+    // BAGIAN LOGIN / REGISTER
+    // ============================================
+    const authScreen = document.getElementById('authScreen');
+    const mainContent = document.getElementById('mainContent');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginError = document.getElementById('loginError');
+    const registerError = document.getElementById('registerError');
+    const authTitle = document.getElementById('authTitle');
+    const authSubtitle = document.getElementById('authSubtitle');
+    const showRegisterLink = document.getElementById('showRegisterLink');
+    const showLoginLink = document.getElementById('showLoginLink');
+    const showLoginWrap = document.getElementById('showLoginWrap');
+    const navUserInfo = document.getElementById('navUserInfo');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    function getLoggedInMember() {
+        const raw = localStorage.getItem('ec_member');
+        return raw ? JSON.parse(raw) : null;
+    }
+
+    function showApp(member) {
+        authScreen.classList.add('hidden');
+        mainContent.classList.remove('hidden');
+        if (navUserInfo) navUserInfo.textContent = `Halo, ${member.nama} 👋`;
+
+        const fullNameInput = document.getElementById('fullName');
+        const memberIdInput = document.getElementById('memberId');
+        if (fullNameInput) { fullNameInput.value = member.nama; fullNameInput.readOnly = true; }
+        if (memberIdInput) { memberIdInput.value = member.kelas; memberIdInput.readOnly = true; }
+    }
+
+    function showAuthScreen() {
+        authScreen.classList.remove('hidden');
+        mainContent.classList.add('hidden');
+    }
+
+    const currentMember = getLoggedInMember();
+    if (currentMember) {
+        showApp(currentMember);
+    } else {
+        showAuthScreen();
+    }
+
+    if (showRegisterLink) {
+        showRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            registerForm.classList.remove('hidden');
+            showLoginWrap.classList.remove('hidden');
+            showRegisterLink.parentElement.classList.add('hidden');
+            authTitle.textContent = 'Daftar Member Baru';
+            authSubtitle.textContent = 'Buat akun untuk mengakses website English Club Seputas.';
+        });
+    }
+
+    if (showLoginLink) {
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            showLoginWrap.classList.add('hidden');
+            showRegisterLink.parentElement.classList.remove('hidden');
+            authTitle.textContent = 'Login Member';
+            authSubtitle.textContent = 'Masuk untuk mengakses website English Club Seputas.';
+        });
+    }
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            loginError.style.display = 'none';
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'login', username, password })
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.result === 'success') {
+                        const member = { username, nama: result.nama, kelas: result.kelas, kontak: result.kontak };
+                        localStorage.setItem('ec_member', JSON.stringify(member));
+                        showApp(member);
+                        loadLiveAttendanceData();
+                    } else {
+                        loginError.textContent = result.message || 'Login gagal, coba lagi.';
+                        loginError.style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    loginError.textContent = 'Gagal terhubung ke server. Cek koneksi internet.';
+                    loginError.style.display = 'block';
+                });
+        });
+    }
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            registerError.style.display = 'none';
+
+            const nama = document.getElementById('regNama').value.trim();
+            const kelas = document.getElementById('regKelas').value.trim();
+            const kontak = document.getElementById('regKontak').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'register', nama, kelas, kontak, username, password })
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.result === 'success') {
+                        const member = { username, nama: result.nama, kelas: result.kelas, kontak: result.kontak };
+                        localStorage.setItem('ec_member', JSON.stringify(member));
+                        showApp(member);
+                        loadLiveAttendanceData();
+                    } else {
+                        registerError.textContent = result.message || 'Pendaftaran gagal, coba lagi.';
+                        registerError.style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    registerError.textContent = 'Gagal terhubung ke server. Cek koneksi internet.';
+                    registerError.style.display = 'block';
+                });
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('ec_member');
+            location.reload();
+        });
+    }
+
+    // ============================================
+    // BAGIAN ABSENSI (sama seperti sebelumnya)
+    // ============================================
     const form = document.getElementById('attendanceForm');
     const successToast = document.getElementById('successMessage');
     const tableBody = document.getElementById('attendanceBody');
@@ -7,9 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = form.querySelector('.btn-submit');
     const originalBtnHTML = submitBtn.innerHTML;
 
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZqevHoeVEsgwzgniOfxfa0_ZY7ZcKB_X4WAD4b5fXRtdyMZJ88aHccqkPXVlcdG_a7g/exec';
-
-    // Helper: Format Date to Indonesian Day and Date (e.g., Jumat, 12 September 2026)
     function getFormattedDate(dateObj) {
         const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -20,11 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${dayName}, ${dayNum} ${monthName} ${year}`;
     }
 
-    // Display Today's Date in Hero Header
     const nowObj = new Date();
     currentDateText.textContent = getFormattedDate(nowObj);
 
-    // Local cache (dipakai hanya untuk tampilan instan sebelum data live datang, bukan sumber utama)
     let attendanceData = JSON.parse(localStorage.getItem('ec_seputas_attendance')) || [];
 
     function renderTable() {
@@ -65,13 +208,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Ambil data TERBARU dari Google Sheets (ini yang bikin datanya "live" di semua device)
     function loadLiveAttendanceData() {
         fetch(GOOGLE_SCRIPT_URL)
             .then(response => response.json())
             .then(rows => {
-                // Samakan nama field dari Sheets (date, class) ke format tampilan (fullDate, memberId)
-                // dan urutkan agar yang terbaru muncul di paling atas
                 attendanceData = rows.map(row => ({
                     fullDate: row.date,
                     timeOnly: row.timeOnly,
@@ -87,16 +227,13 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => {
                 console.error('Gagal mengambil data live dari Google Sheets:', err);
-                // Kalau gagal fetch (misal offline), tetap tampilkan cache lokal yang ada
                 renderTable();
             });
     }
 
-    // Render dulu pakai cache lokal (instan), lalu langsung timpa dengan data live
     renderTable();
-    loadLiveAttendanceData();
+    if (currentMember) loadLiveAttendanceData();
 
-    // Form submission handler
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -110,7 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const fullDateStr = getFormattedDate(now);
         const timeOnlyStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }) + ' WIB';
 
-        // PENTING: nama field ini harus sama persis dengan yang dibaca doPost di Apps Script
         const record = {
             date: fullDateStr,
             timeOnly: timeOnlyStr,
@@ -132,12 +268,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(() => {
                 if (successToast) successToast.classList.remove('hidden');
-                form.reset();
+                document.getElementById('status').value = '';
+                document.getElementById('notes').value = '';
                 setTimeout(() => {
                     if (successToast) successToast.classList.add('hidden');
                 }, 4000);
-
-                // Muat ulang data dari Sheets supaya baris baru langsung terlihat (juga di device lain saat mereka refresh)
                 loadLiveAttendanceData();
             })
             .catch(err => {
