@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentDateText = document.getElementById('currentDateText');
     const submitBtn = form.querySelector('.btn-submit');
     const originalBtnHTML = submitBtn.innerHTML;
- 
+
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZqevHoeVEsgwzgniOfxfa0_ZY7ZcKB_X4WAD4b5fXRtdyMZJ88aHccqkPXVlcdG_a7g/exec';
- 
+
     // Helper: Format Date to Indonesian Day and Date (e.g., Jumat, 12 September 2026)
     function getFormattedDate(dateObj) {
         const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const year = dateObj.getFullYear();
         return `${dayName}, ${dayNum} ${monthName} ${year}`;
     }
-
 
     // Display Today's Date in Hero Header
     const nowObj = new Date();
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (attendanceData.length === 0) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">
+                    <td colspan="7" style="text-align: center; color: #94a3b8; padding: 2rem;">
                         Belum ada data presensi terdaftar. Silakan isi form di atas!
                     </td>
                 </tr>
@@ -60,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td style="font-weight: 700; color: #1e293b;">${item.name}</td>
                 <td>${item.memberId}</td>
                 <td><span style="${statusBadgeStyle}">${item.status}</span></td>
+                <td style="color: #64748b; font-size: 0.85rem; max-width: 220px; white-space: normal;">${item.notes && item.notes.trim() !== '' ? item.notes : '-'}</td>
             `;
             tableBody.appendChild(tr);
         });
